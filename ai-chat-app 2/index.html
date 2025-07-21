@@ -3,424 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat - 智能聊天助手</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="description" content="与AI虚拟角色进行智能对话的H5应用">
-    <meta name="keywords" content="AI, 聊天, 虚拟角色, 智能对话">
-    <!-- 移动端优化 -->
-    <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="AI Chat">
-    <!-- 图标 -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <title>AI Chat Demo - GitHub Pages</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .feature h3 {
+            margin-top: 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- 加载动画 -->
-    <div id="loading" class="loading">
-        <div class="loading-spinner"></div>
-        <p data-i18n="loading">正在加载...</p>
-    </div>
-
-    <!-- 主应用容器 -->
-    <div id="app" class="app" style="display: none;">
-        <!-- 登录页面 -->
-        <div id="login-page" class="page">
-            <div class="auth-container">
-                <div class="auth-header">
-                    <div class="logo">🤖</div>
-                    <h1 data-i18n="app.title">AI Chat</h1>
-                    <p data-i18n="login.subtitle">与AI虚拟角色开始对话</p>
-                </div>
-                <form id="login-form" class="auth-form">
-                    <div class="form-group">
-                        <label data-i18n="auth.email">邮箱或手机号</label>
-                        <input type="email" id="login-email" placeholder="请输入邮箱或手机号" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="auth.password">密码</label>
-                        <input type="password" id="login-password" placeholder="请输入密码" required>
-                    </div>
-                    <button type="submit" class="btn-primary" data-i18n="auth.login">登录</button>
-                </form>
-                <div class="auth-footer">
-                    <p data-i18n="login.noAccount">没有账号？</p>
-                    <button class="btn-link" id="go-register" data-i18n="auth.register">立即注册</button>
-                </div>
+    <div class="container">
+        <h1>🤖 AI Chat Demo</h1>
+        <p>智能聊天助手 - 支持创建自定义AI角色并进行智能对话</p>
+        
+        <div>
+            <a href="index.html" class="btn">🚀 启动应用</a>
+            <a href="test.html" class="btn">🧪 功能测试</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🎯 模板创建</h3>
+                <p>快速创建高质量角色，预设浪漫女友和通用陪伴女友模板</p>
+            </div>
+            <div class="feature">
+                <h3>⚙️ 完全自定义</h3>
+                <p>适合Prompt专家，完全自定义角色设定</p>
+            </div>
+            <div class="feature">
+                <h3>🌐 多语言支持</h3>
+                <p>支持中文、英文、阿拉伯文三种语言</p>
+            </div>
+            <div class="feature">
+                <h3>📱 响应式设计</h3>
+                <p>完美适配手机、平板、桌面设备</p>
             </div>
         </div>
-
-        <!-- 注册页面 -->
-        <div id="register-page" class="page" style="display: none;">
-            <div class="auth-container">
-                <div class="auth-header">
-                    <div class="logo">🤖</div>
-                    <h1 data-i18n="register.title">创建账号</h1>
-                    <p data-i18n="register.subtitle">加入AI Chat开始体验</p>
-                </div>
-                <form id="register-form" class="auth-form">
-                    <div class="form-group">
-                        <label data-i18n="auth.email">邮箱或手机号</label>
-                        <input type="email" id="register-email" placeholder="请输入邮箱或手机号" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="auth.password">密码</label>
-                        <input type="password" id="register-password" placeholder="请输入密码" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-i18n="auth.confirmPassword">确认密码</label>
-                        <input type="password" id="register-confirm-password" placeholder="请确认密码" required>
-                    </div>
-                    <button type="submit" class="btn-primary" data-i18n="auth.register">注册</button>
-                </form>
-                <div class="auth-footer">
-                    <p data-i18n="register.hasAccount">已有账号？</p>
-                    <button class="btn-link" id="go-login" data-i18n="auth.login">立即登录</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 主界面 -->
-        <div id="main-app" class="main-app" style="display: none;">
-            <!-- 头部导航 -->
-            <header class="app-header">
-                <div class="header-content">
-                    <h1 id="page-title" data-i18n="roles.title">AI 角色</h1>
-                    <button class="header-btn" id="header-action-btn" style="display: none;">
-                        <span data-i18n="roles.create">创建</span>
-                    </button>
-                </div>
-            </header>
-
-            <!-- 页面内容区域 -->
-            <main class="app-main">
-                <!-- 角色列表页 -->
-                <div id="roles-page" class="page-content">
-                    <div class="tab-nav">
-                        <button class="tab-btn active" data-tab="public" data-i18n="roles.public">公开角色</button>
-                        <button class="tab-btn" data-tab="my" data-i18n="roles.my">我的角色</button>
-                    </div>
-                    
-                    <!-- 公开角色列表 -->
-                    <div id="public-roles-tab" class="tab-content active">
-                        <div class="roles-list" id="public-roles-list">
-                            <!-- 角色卡片将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-
-                    <!-- 我的角色列表 -->
-                    <div id="my-roles-tab" class="tab-content">
-                        <div class="create-role-banner">
-                            <button class="btn-create-role" id="create-role-btn">
-                                <span class="icon">➕</span>
-                                <span data-i18n="roles.createRole">创建AI虚拟角色</span>
-                            </button>
-                        </div>
-                        <div class="roles-list" id="my-roles-list">
-                            <!-- 我的角色列表将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 聊天列表页 -->
-                <div id="chat-list-page" class="page-content" style="display: none;">
-                    <div class="chat-list" id="chat-list">
-                        <!-- 聊天列表将通过JavaScript动态生成 -->
-                    </div>
-                </div>
-
-                <!-- 设置页面 -->
-                <div id="settings-page" class="page-content" style="display: none;">
-                    <div class="settings-content">
-                        <!-- 用户信息区 -->
-                        <div class="settings-section">
-                            <div class="user-info">
-                                <div class="user-avatar">
-                                    <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👤</text></svg>" alt="用户头像">
-                                </div>
-                                <div class="user-details">
-                                    <h3 id="user-name">用户名</h3>
-                                    <p class="user-id">
-                                        <span data-i18n="settings.userId">用户ID:</span>
-                                        <span id="user-id-value">user_123456</span>
-                                        <button class="btn-copy" id="copy-user-id" title="复制用户ID">📋</button>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 应用设置区 -->
-                        <div class="settings-section">
-                            <h3 data-i18n="settings.appSettings">应用设置</h3>
-                            <div class="settings-list">
-                                <div class="settings-item" id="language-setting">
-                                    <div class="settings-icon">🌐</div>
-                                    <div class="settings-text">
-                                        <span data-i18n="settings.language">语言/Language</span>
-                                        <span class="settings-value" id="current-language">简体中文</span>
-                                    </div>
-                                    <div class="settings-arrow">›</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 支持与业务区 -->
-                        <div class="settings-section">
-                            <h3 data-i18n="settings.support">支持与业务</h3>
-                            <div class="settings-list">
-                                <div class="settings-item" id="contact-sales">
-                                    <div class="settings-icon">📞</div>
-                                    <div class="settings-text">
-                                        <span data-i18n="settings.contactSales">联系销售</span>
-                                    </div>
-                                    <div class="settings-arrow">›</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 其他设置 -->
-                        <div class="settings-section">
-                            <div class="settings-list">
-                                <div class="settings-item" id="logout-btn">
-                                    <div class="settings-icon">🚪</div>
-                                    <div class="settings-text danger">
-                                        <span data-i18n="settings.logout">退出登录</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            <!-- 底部导航栏 -->
-            <nav class="bottom-nav">
-                <button class="nav-btn active" data-page="roles">
-                    <span class="nav-icon">🤖</span>
-                    <span class="nav-text" data-i18n="nav.roles">角色</span>
-                </button>
-                <button class="nav-btn" data-page="chat-list">
-                    <span class="nav-icon">💬</span>
-                    <span class="nav-text" data-i18n="nav.chat">聊天</span>
-                    <span class="nav-badge" id="chat-badge" style="display: none;">0</span>
-                </button>
-                <button class="nav-btn" data-page="settings">
-                    <span class="nav-icon">⚙️</span>
-                    <span class="nav-text" data-i18n="nav.settings">设置</span>
-                </button>
-            </nav>
-        </div>
-
-        <!-- 聊天页面 -->
-        <div id="chat-page" class="page chat-page" style="display: none;">
-            <div class="chat-header">
-                <button class="back-btn" id="back-to-chat-list">‹</button>
-                <div class="chat-header-info">
-                    <img class="chat-avatar" id="chat-avatar" src="" alt="AI头像">
-                    <div class="chat-title">
-                        <h3 id="chat-name">AI角色名</h3>
-                        <span class="ai-badge" data-i18n="chat.aiIndicator">AI</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chat-messages" id="chat-messages">
-                <!-- 聊天消息将通过JavaScript动态生成 -->
-            </div>
-
-            <div class="chat-input-container">
-                <div class="suggestions-container" id="suggestions-container" style="display: none;">
-                    <div class="suggestions-header">
-                        <span data-i18n="chat.suggestions">智能建议</span>
-                        <button class="btn-close" id="close-suggestions">×</button>
-                    </div>
-                    <div class="suggestions-list" id="suggestions-list">
-                        <!-- 建议列表将通过JavaScript动态生成 -->
-                    </div>
-                </div>
-                
-                <div class="chat-input">
-                    <button class="btn-suggestions" id="get-suggestions" title="获取AI回复建议">✨</button>
-                    <input type="text" id="message-input" placeholder="输入消息..." data-i18n-placeholder="chat.inputPlaceholder">
-                    <button class="btn-send" id="send-message" disabled>
-                        <span>➤</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 创建模式选择页面 -->
-        <div id="create-mode-page" class="page" style="display: none;">
-            <div class="create-mode-container">
-                <div class="create-mode-header">
-                    <button class="back-btn" id="back-to-roles-from-mode">‹</button>
-                    <h1 data-i18n="createMode.title">选择创建模式</h1>
-                </div>
-                
-                <div class="mode-options">
-                    <div class="mode-option" id="template-mode">
-                        <div class="mode-icon">🎯</div>
-                        <div class="mode-content">
-                            <h3 data-i18n="createMode.templateTitle">使用模板创建</h3>
-                            <p data-i18n="createMode.templateDesc">推荐！快速创建高质量角色</p>
-                            <div class="mode-features">
-                                <span class="feature-tag">快速</span>
-                                <span class="feature-tag">高质量</span>
-                                <span class="feature-tag">简单</span>
-                            </div>
-                        </div>
-                        <div class="mode-arrow">›</div>
-                    </div>
-                    
-                    <div class="mode-option" id="custom-mode">
-                        <div class="mode-icon">⚙️</div>
-                        <div class="mode-content">
-                            <h3 data-i18n="createMode.customTitle">完全自定义</h3>
-                            <p data-i18n="createMode.customDesc">适合Prompt专家</p>
-                            <div class="mode-features">
-                                <span class="feature-tag">灵活</span>
-                                <span class="feature-tag">专业</span>
-                                <span class="feature-tag">深度定制</span>
-                            </div>
-                        </div>
-                        <div class="mode-arrow">›</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 创建角色页面 -->
-        <div id="create-role-page" class="page" style="display: none;">
-            <div class="create-role-container">
-                <div class="create-role-header">
-                    <button class="back-btn" id="back-to-mode">‹</button>
-                    <h1 id="create-role-title" data-i18n="createRole.title">创建AI虚拟角色</h1>
-                </div>
-                
-                <!-- 模板创建表单 -->
-                <form id="template-create-form" class="create-role-form" style="display: none;">
-                    <div class="form-group">
-                        <label data-i18n="createRole.templateSelect">选择模板 *</label>
-                        <div class="template-grid" id="template-grid">
-                            <!-- 模板选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label data-i18n="createRole.avatar">头像选择 *</label>
-                        <div class="avatar-grid" id="template-avatar-grid">
-                            <!-- 头像选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label data-i18n="createRole.name">虚拟角色名称 *</label>
-                        <input type="text" id="template-role-name" placeholder="请输入角色名称" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label data-i18n="createRole.corePersona">一句话核心人设 *</label>
-                        <textarea id="template-core-persona" placeholder="例如：开朗、奔放、直接、诱惑；" required></textarea>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn-cancel" id="cancel-template-create" data-i18n="common.cancel">取消</button>
-                        <button type="submit" class="btn-primary" data-i18n="common.save">保存</button>
-                    </div>
-                </form>
-                
-                <!-- 自定义创建表单 -->
-                <form id="custom-create-form" class="create-role-form" style="display: none;">
-                    <div class="form-group">
-                        <label data-i18n="createRole.avatar">头像选择 *</label>
-                        <div class="avatar-grid" id="custom-avatar-grid">
-                            <!-- 头像选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label data-i18n="createRole.name">虚拟角色名称 *</label>
-                        <input type="text" id="custom-role-name" placeholder="请输入角色名称" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label data-i18n="createRole.customPersona">自定义人设设定 *</label>
-                        <textarea id="custom-persona" placeholder="请用几句话描述你的 AI 角色，例如：他是一个来自未来的侦探，说话严谨，但内心很温柔。" required></textarea>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn-cancel" id="cancel-custom-create" data-i18n="common.cancel">取消</button>
-                        <button type="submit" class="btn-primary" data-i18n="common.save">保存</button>
-                    </div>
-                </form>
-            </div>
+        
+        <div style="margin-top: 40px; opacity: 0.8;">
+            <p>GitHub Pages 部署成功！</p>
+            <p>访问地址: https://ricky5683.github.io/ai-chat-demo/</p>
         </div>
     </div>
-
-    <!-- 模态框 -->
-    <div id="modal-overlay" class="modal-overlay" style="display: none;">
-        <!-- 语言选择模态框 -->
-        <div id="language-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 data-i18n="settings.selectLanguage">选择语言</h3>
-                    <button class="btn-close" id="close-language-modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="language-options">
-                        <label class="language-option">
-                            <input type="radio" name="language" value="zh-CN">
-                            <span>简体中文</span>
-                        </label>
-                        <label class="language-option">
-                            <input type="radio" name="language" value="en-US">
-                            <span>English</span>
-                        </label>
-                        <label class="language-option">
-                            <input type="radio" name="language" value="ar-SA">
-                            <span>العربية</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 联系销售模态框 -->
-        <div id="contact-sales-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 data-i18n="contactSales.title">获取专属解决方案</h3>
-                    <button class="btn-close" id="close-contact-modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <p data-i18n="contactSales.description">请留下您的手机号码，我们的解决方案专家将尽快与您联系。</p>
-                    <form id="contact-sales-form">
-                        <div class="phone-input-group">
-                            <select id="country-code" class="country-select">
-                                <option value="+86">🇨🇳 +86</option>
-                                <option value="+1">🇺🇸 +1</option>
-                                <option value="+966">🇸🇦 +966</option>
-                                <option value="+971">🇦🇪 +971</option>
-                            </select>
-                            <input type="tel" id="phone-number" placeholder="请输入手机号码" required>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn-cancel" id="cancel-contact" data-i18n="common.cancel">取消</button>
-                            <button type="submit" class="btn-primary" data-i18n="common.submit">提交</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast提示 -->
-    <div id="toast" class="toast" style="display: none;">
-        <span id="toast-message"></span>
-    </div>
-
-    <script src="i18n.js"></script>
-    <script src="script.js"></script>
-    <script src="validate.js"></script>
 </body>
-</html>
+</html> 
