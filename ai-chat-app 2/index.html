@@ -1,34 +1,25 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Demo - GitHub Pages</title>
+    <title>AI Chat Demo - MAIN BRANCH</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
         .container {
-            text-align: center;
             max-width: 600px;
         }
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
         }
         .btn {
             display: inline-block;
@@ -38,63 +29,31 @@
             text-decoration: none;
             border-radius: 10px;
             margin: 10px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s;
         }
         .btn:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        .features {
-            margin-top: 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-        .feature h3 {
-            margin-top: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🤖 AI Chat Demo</h1>
-        <p>智能聊天助手 - 支持创建自定义AI角色并进行智能对话</p>
+        <p>GitHub Pages 测试 - 从 MAIN 分支部署</p>
+        <p>如果你看到这个页面，说明GitHub Pages正常工作！</p>
         
         <div>
-            <a href="index.html" class="btn">🚀 启动应用</a>
+            <a href="index-original.html" class="btn">🚀 完整应用</a>
             <a href="test.html" class="btn">🧪 功能测试</a>
         </div>
         
-        <div class="features">
-            <div class="feature">
-                <h3>🎯 模板创建</h3>
-                <p>快速创建高质量角色，预设浪漫女友和通用陪伴女友模板</p>
-            </div>
-            <div class="feature">
-                <h3>⚙️ 完全自定义</h3>
-                <p>适合Prompt专家，完全自定义角色设定</p>
-            </div>
-            <div class="feature">
-                <h3>🌐 多语言支持</h3>
-                <p>支持中文、英文、阿拉伯文三种语言</p>
-            </div>
-            <div class="feature">
-                <h3>📱 响应式设计</h3>
-                <p>完美适配手机、平板、桌面设备</p>
-            </div>
-        </div>
-        
-        <div style="margin-top: 40px; opacity: 0.8;">
-            <p>GitHub Pages 部署成功！</p>
-            <p>访问地址: https://ricky5683.github.io/ai-chat-demo/</p>
-        </div>
+        <p style="margin-top: 50px; font-size: 0.9rem; opacity: 0.8;">
+            部署时间: <span id="time"></span>
+        </p>
     </div>
+    
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
 </body>
 </html> 
