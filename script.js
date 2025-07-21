@@ -624,11 +624,11 @@ class AIChat {
         const displayAvatar = avatarMap[role.avatar] || role.avatar;
         
         card.innerHTML = `
-            <div class="role-avatar-portrait">
+            <div class="role-avatar-section">
                 <div class="avatar-image">${displayAvatar}</div>
                 ${!isMyRole ? '<div class="role-badge">角色需攻略</div>' : ''}
             </div>
-            <div class="role-info">
+            <div class="role-content-section">
                 <div class="role-header">
                     <div class="role-name-age">${role.name} · ${role.age}</div>
                     <div class="role-location-job">${role.location || '未知'} · ${role.job || 'AI助手'}</div>
