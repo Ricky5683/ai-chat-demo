@@ -59,6 +59,16 @@ const i18n = {
             'createRole.avatar': '头像选择',
             'createRole.persona': '人设设定',
             'createRole.personaPlaceholder': '请用几句话描述你的AI角色，例如：他是一个来自未来的侦探，说话严谨，但内心很温柔。',
+            'createRole.templateSelect': '选择模板',
+            'createRole.corePersona': '一句话核心人设',
+            'createRole.customPersona': '自定义人设设定',
+            
+            // 创建模式选择
+            'createMode.title': '选择创建模式',
+            'createMode.templateTitle': '使用模板创建',
+            'createMode.templateDesc': '推荐！快速创建高质量角色',
+            'createMode.customTitle': '完全自定义',
+            'createMode.customDesc': '适合Prompt专家',
             
             // 聊天页面
             'chat.aiIndicator': 'AI',
@@ -161,6 +171,16 @@ const i18n = {
             'createRole.avatar': 'Avatar Selection',
             'createRole.persona': 'Character Setting',
             'createRole.personaPlaceholder': 'Describe your AI character in a few sentences, e.g.: He is a detective from the future, speaks rigorously, but has a gentle heart.',
+            'createRole.templateSelect': 'Select Template',
+            'createRole.corePersona': 'One-sentence Core Persona',
+            'createRole.customPersona': 'Custom Persona Setting',
+            
+            // Create mode selection
+            'createMode.title': 'Choose Creation Mode',
+            'createMode.templateTitle': 'Create using Template',
+            'createMode.templateDesc': 'Recommended! Quick creation of high-quality characters',
+            'createMode.customTitle': 'Fully Custom',
+            'createMode.customDesc': 'Suitable for Prompt experts',
             
             // Chat page
             'chat.aiIndicator': 'AI',
@@ -263,6 +283,16 @@ const i18n = {
             'createRole.avatar': 'اختيار الصورة الرمزية',
             'createRole.persona': 'إعداد الشخصية',
             'createRole.personaPlaceholder': 'صف شخصيتك الذكية في بضع جمل، مثل: هو محقق من المستقبل، يتحدث بصرامة، لكن لديه قلب لطيف.',
+            'createRole.templateSelect': 'اختيار القالب',
+            'createRole.corePersona': 'شخصية قلبية واحدة',
+            'createRole.customPersona': 'إعداد شخصية مخصصة',
+            
+            // Create mode selection
+            'createMode.title': 'اختيار وضع الإنشاء',
+            'createMode.templateTitle': 'إنشاء باستخدام القالب',
+            'createMode.templateDesc': 'موصى به! إنشاء أحرف عالية الجودة بسرعة',
+            'createMode.customTitle': 'الكامل المخصص',
+            'createMode.customDesc': 'مناسب لمحامي البرمجة',
             
             // Chat page
             'chat.aiIndicator': 'AI',

@@ -7,6 +7,26 @@ class AIChat {
         this.myRoles = [];
         this.chats = [];
         this.currentPage = 'login';
+        this.createMode = null; // 当前创建模式：'template' 或 'custom'
+        this.selectedTemplate = null; // 选中的模板
+        
+        // 预设的角色模板
+        this.roleTemplates = [
+            {
+                id: 'romantic_girlfriend',
+                name: '浪漫女友',
+                icon: '💕',
+                description: '温柔体贴，善解人意，充满浪漫情怀的虚拟女友',
+                promptTemplate: '你是一个名叫{name}的浪漫女友。你的性格特点是{persona}。你温柔体贴，善解人意，总是能给予对方温暖和关怀。你会用甜美的语气说话，经常表达爱意，但不会过于粘人。你懂得在适当的时候给予鼓励和支持，也会在对方需要时提供建议和安慰。'
+            },
+            {
+                id: 'companion_girlfriend',
+                name: '通用陪伴女友',
+                icon: '👩‍❤️‍👨',
+                description: '活泼开朗，陪伴聊天，分享生活的虚拟女友',
+                promptTemplate: '你是一个名叫{name}的陪伴女友。你的性格特点是{persona}。你活泼开朗，喜欢聊天和分享，总是能给对方带来快乐和正能量。你会主动关心对方的生活，分享有趣的话题，也会认真倾听对方的心事。你是一个很好的朋友和伴侣，能够陪伴对方度过各种时光。'
+            }
+        ];
         
         this.init();
     }
@@ -36,10 +56,21 @@ class AIChat {
         });
         
         // 角色管理
-        document.getElementById('create-role-btn').addEventListener('click', () => this.showCreateRolePage());
-        document.getElementById('create-role-form').addEventListener('submit', (e) => this.handleCreateRole(e));
-        document.getElementById('back-to-roles').addEventListener('click', () => this.showRolesPage());
-        document.getElementById('cancel-create-role').addEventListener('click', () => this.showRolesPage());
+        document.getElementById('create-role-btn').addEventListener('click', () => this.showCreateModePage());
+        document.getElementById('back-to-roles-from-mode').addEventListener('click', () => this.showRolesPage());
+        document.getElementById('back-to-mode').addEventListener('click', () => this.showCreateModePage());
+        
+        // 创建模式选择
+        document.getElementById('template-mode').addEventListener('click', () => this.selectCreateMode('template'));
+        document.getElementById('custom-mode').addEventListener('click', () => this.selectCreateMode('custom'));
+        
+        // 模板创建表单
+        document.getElementById('template-create-form').addEventListener('submit', (e) => this.handleTemplateCreate(e));
+        document.getElementById('cancel-template-create').addEventListener('click', () => this.showCreateModePage());
+        
+        // 自定义创建表单
+        document.getElementById('custom-create-form').addEventListener('submit', (e) => this.handleCustomCreate(e));
+        document.getElementById('cancel-custom-create').addEventListener('click', () => this.showCreateModePage());
         
         // 聊天相关
         document.getElementById('back-to-chat-list').addEventListener('click', () => this.showChatListPage());
@@ -182,6 +213,7 @@ class AIChat {
         document.getElementById('main-app').style.display = 'flex';
         document.getElementById('chat-page').style.display = 'none';
         document.getElementById('create-role-page').style.display = 'none';
+        document.getElementById('create-mode-page').style.display = 'none';
         this.showRolesPage();
     }
     
@@ -193,6 +225,7 @@ class AIChat {
         document.getElementById("main-app").style.display = "flex";
         document.getElementById("chat-page").style.display = "none";
         document.getElementById("create-role-page").style.display = "none";
+        document.getElementById("create-mode-page").style.display = "none";
         
         // 设置当前页面状态
         this.currentPage = "roles";
@@ -208,6 +241,7 @@ class AIChat {
         document.getElementById("main-app").style.display = "flex";
         document.getElementById("chat-page").style.display = "none";
         document.getElementById("create-role-page").style.display = "none";
+        document.getElementById("create-mode-page").style.display = "none";
         
         // 设置当前页面状态
         this.currentPage = "chat-list";
@@ -223,6 +257,7 @@ class AIChat {
         document.getElementById("main-app").style.display = "flex";
         document.getElementById("chat-page").style.display = "none";
         document.getElementById("create-role-page").style.display = "none";
+        document.getElementById("create-mode-page").style.display = "none";
         
         // 设置当前页面状态
         this.currentPage = "settings";
@@ -235,18 +270,118 @@ class AIChat {
         document.getElementById('main-app').style.display = 'none';
         document.getElementById('chat-page').style.display = 'flex';
         document.getElementById('create-role-page').style.display = 'none';
+        document.getElementById('create-mode-page').style.display = 'none';
         
         this.currentChat = this.getOrCreateChat(role);
         this.setupChatPage(role);
         this.renderMessages();
     }
     
+    // 显示创建模式选择页面
+    showCreateModePage() {
+        document.getElementById('main-app').style.display = 'none';
+        document.getElementById('chat-page').style.display = 'none';
+        document.getElementById('create-role-page').style.display = 'none';
+        document.getElementById('create-mode-page').style.display = 'block';
+        this.currentPage = 'create-mode';
+    }
+    
+    // 选择创建模式
+    selectCreateMode(mode) {
+        this.createMode = mode;
+        this.showCreateRolePage();
+    }
+    
     // 显示创建角色页面
     showCreateRolePage() {
         document.getElementById('main-app').style.display = 'none';
         document.getElementById('chat-page').style.display = 'none';
+        document.getElementById('create-mode-page').style.display = 'none';
         document.getElementById('create-role-page').style.display = 'block';
-        this.setupCreateRolePage();
+        
+        // 根据创建模式设置页面标题和显示对应表单
+        if (this.createMode === 'template') {
+            document.getElementById('create-role-title').textContent = '使用模板创建角色';
+            document.getElementById('template-create-form').style.display = 'block';
+            document.getElementById('custom-create-form').style.display = 'none';
+            this.setupTemplateCreatePage();
+        } else if (this.createMode === 'custom') {
+            document.getElementById('create-role-title').textContent = '完全自定义角色';
+            document.getElementById('template-create-form').style.display = 'none';
+            document.getElementById('custom-create-form').style.display = 'block';
+            this.setupCustomCreatePage();
+        }
+    }
+    
+    // 设置模板创建页面
+    setupTemplateCreatePage() {
+        // 生成模板选项
+        const templateGrid = document.getElementById('template-grid');
+        templateGrid.innerHTML = this.roleTemplates.map(template => 
+            `<div class="template-option" data-template-id="${template.id}" onclick="aiChat.selectTemplate('${template.id}')">
+                <div class="template-icon">${template.icon}</div>
+                <div class="template-name">${template.name}</div>
+                <div class="template-desc">${template.description}</div>
+            </div>`
+        ).join('');
+        
+        // 生成头像选项
+        const avatarGrid = document.getElementById('template-avatar-grid');
+        const avatars = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍⚕️', '👩‍⚕️', '🧑‍🎨', '👨‍🔬', '👩‍🔬', '🧑‍💻', '👨‍🏫', '👩‍🏫'];
+        avatarGrid.innerHTML = avatars.map(avatar => 
+            `<div class="avatar-option" data-avatar="${avatar}" onclick="aiChat.selectTemplateAvatar('${avatar}')">${avatar}</div>`
+        ).join('');
+        
+        // 重置表单
+        document.getElementById('template-create-form').reset();
+        document.querySelectorAll('.template-option').forEach(option => option.classList.remove('selected'));
+        document.querySelectorAll('#template-avatar-grid .avatar-option').forEach(option => option.classList.remove('selected'));
+        this.selectedTemplate = null;
+    }
+    
+    // 设置自定义创建页面
+    setupCustomCreatePage() {
+        // 生成头像选项
+        const avatarGrid = document.getElementById('custom-avatar-grid');
+        const avatars = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍⚕️', '👩‍⚕️', '🧑‍🎨', '👨‍🔬', '👩‍🔬', '🧑‍💻', '👨‍🏫', '👩‍🏫'];
+        avatarGrid.innerHTML = avatars.map(avatar => 
+            `<div class="avatar-option" data-avatar="${avatar}" onclick="aiChat.selectCustomAvatar('${avatar}')">${avatar}</div>`
+        ).join('');
+        
+        // 重置表单
+        document.getElementById('custom-create-form').reset();
+        document.querySelectorAll('#custom-avatar-grid .avatar-option').forEach(option => option.classList.remove('selected'));
+    }
+    
+    // 选择模板
+    selectTemplate(templateId) {
+        document.querySelectorAll('.template-option').forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.templateId === templateId) {
+                option.classList.add('selected');
+            }
+        });
+        this.selectedTemplate = this.roleTemplates.find(t => t.id === templateId);
+    }
+    
+    // 选择模板创建头像
+    selectTemplateAvatar(avatar) {
+        document.querySelectorAll('#template-avatar-grid .avatar-option').forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.avatar === avatar) {
+                option.classList.add('selected');
+            }
+        });
+    }
+    
+    // 选择自定义创建头像
+    selectCustomAvatar(avatar) {
+        document.querySelectorAll('#custom-avatar-grid .avatar-option').forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.avatar === avatar) {
+                option.classList.add('selected');
+            }
+        });
     }
     
     // 处理登录
@@ -730,41 +865,66 @@ class AIChat {
         return item;
     }
     
-    // 设置创建角色页面
-    setupCreateRolePage() {
-        // 生成头像选项
-        const avatarGrid = document.getElementById('avatar-grid');
-        const avatars = ['👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓', '👨‍⚕️', '��‍⚕️', '🧑‍🎨', '👨‍🔬', '👩‍🔬', '🧑‍💻', '👨‍🏫', '👩‍🏫'];
-        
-        avatarGrid.innerHTML = avatars.map(avatar => 
-            `<div class="avatar-option" data-avatar="${avatar}" onclick="aiChat.selectAvatar('${avatar}')">${avatar}</div>`
-        ).join('');
-        
-        // 重置表单
-        document.getElementById('create-role-form').reset();
-        document.querySelectorAll('.avatar-option').forEach(option => option.classList.remove('selected'));
-    }
-    
-    // 选择头像
-    selectAvatar(avatar) {
-        document.querySelectorAll('.avatar-option').forEach(option => {
-            option.classList.remove('selected');
-            if (option.dataset.avatar === avatar) {
-                option.classList.add('selected');
-            }
-        });
-    }
-    
-    // 处理创建角色
-    async handleCreateRole(e) {
+    // 处理模板创建
+    async handleTemplateCreate(e) {
         e.preventDefault();
         
-        const name = document.getElementById('role-name').value.trim();
-        const gender = document.querySelector('input[name="gender"]:checked')?.value;
-        const avatar = document.querySelector('.avatar-option.selected')?.dataset.avatar;
-        const persona = document.getElementById('role-persona').value.trim();
+        if (!this.selectedTemplate) {
+            this.showToast('请先选择一个模板', 'error');
+            return;
+        }
         
-        if (!name || !gender || !avatar || !persona) {
+        const name = document.getElementById('template-role-name').value.trim();
+        const avatar = document.querySelector('#template-avatar-grid .avatar-option.selected')?.dataset.avatar;
+        const corePersona = document.getElementById('template-core-persona').value.trim();
+        
+        if (!name || !avatar || !corePersona) {
+            this.showToast(i18n.t('message.fieldRequired'), 'error');
+            return;
+        }
+        
+        try {
+            // 模拟API调用
+            await this.simulateApiCall();
+            
+            // 使用模板生成完整的Prompt
+            const fullPrompt = this.selectedTemplate.promptTemplate
+                .replace('{name}', name)
+                .replace('{persona}', corePersona);
+            
+            const newRole = {
+                id: Date.now(),
+                name: name,
+                gender: 'female', // 模板角色通常是女性
+                avatar: avatar,
+                age: 22, // 模板角色年龄
+                description: corePersona.substring(0, 50) + (corePersona.length > 50 ? '...' : ''),
+                tags: this.extractTags(corePersona),
+                isPublic: false,
+                persona: fullPrompt,
+                templateId: this.selectedTemplate.id
+            };
+            
+            this.myRoles.push(newRole);
+            this.saveMyRoles();
+            
+            this.showToast(i18n.t('message.createRoleSuccess'), 'success');
+            this.showRolesPage();
+            
+        } catch (error) {
+            this.showToast(i18n.t('message.createRoleFailed'), 'error');
+        }
+    }
+    
+    // 处理自定义创建
+    async handleCustomCreate(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('custom-role-name').value.trim();
+        const avatar = document.querySelector('#custom-avatar-grid .avatar-option.selected')?.dataset.avatar;
+        const persona = document.getElementById('custom-persona').value.trim();
+        
+        if (!name || !avatar || !persona) {
             this.showToast(i18n.t('message.fieldRequired'), 'error');
             return;
         }
@@ -776,9 +936,9 @@ class AIChat {
             const newRole = {
                 id: Date.now(),
                 name: name,
-                gender: gender,
+                gender: 'secret', // 自定义角色性别保密
                 avatar: avatar,
-                age: 25,
+                age: 25, // 自定义角色年龄
                 description: persona.substring(0, 50) + (persona.length > 50 ? '...' : ''),
                 tags: this.extractTags(persona),
                 isPublic: false,

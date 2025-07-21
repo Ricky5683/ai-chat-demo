@@ -1,212 +1,91 @@
-# 部署说明 - AI Chat H5应用
+# 部署说明
 
-## 🚀 本地开发环境
+## GitHub Pages 部署
 
-### 方式1: Python HTTP服务器
+### 自动部署（推荐）
+
+1. **GitHub Actions 已配置**
+   - 每次推送到 `main` 分支时自动触发部署
+   - 部署到 `gh-pages` 分支
+   - 访问地址：`https://ricky5683.github.io/ai-chat-demo/`
+
+### 手动设置 GitHub Pages
+
+如果自动部署不工作，可以手动设置：
+
+1. 进入 GitHub 仓库设置
+2. 找到 "Pages" 选项
+3. 选择 "Deploy from a branch"
+4. 选择 "gh-pages" 分支
+5. 点击 "Save"
+
+### 本地开发
+
 ```bash
-cd ai-chat-app
-python -m http.server 8000
-# 或
+# 启动本地服务器
 python3 -m http.server 8000
+
+# 访问地址
+http://localhost:8000
 ```
 
-### 方式2: Node.js HTTP服务器
-```bash
-# 安装http-server
-npm install -g http-server
+## 文件结构
 
-# 启动服务器
-cd ai-chat-app
-http-server -p 8000
+```
+ai-chat-demo/
+├── index.html          # 主页面
+├── script.js           # 主要JavaScript逻辑
+├── style.css           # 样式文件
+├── i18n.js            # 国际化配置
+├── test.html          # 功能测试页面
+├── validate.js        # 功能验证脚本
+├── README.md          # 项目说明
+├── DEPLOYMENT.md      # 部署说明
+└── .github/
+    └── workflows/
+        └── deploy.yml  # GitHub Actions 工作流
 ```
 
-### 方式3: PHP内置服务器
-```bash
-cd ai-chat-app
-php -S localhost:8000
-```
+## 功能特性
 
-访问地址：http://localhost:8000
+### 创建模式选择
+- **使用模板创建**：快速创建高质量角色
+- **完全自定义**：适合Prompt专家
 
-## 🌐 生产环境部署
+### 预设模板
+- 浪漫女友：温柔体贴，善解人意
+- 通用陪伴女友：活泼开朗，陪伴聊天
 
-### 1. 静态网站托管
+### 技术特点
+- 响应式设计
+- 多语言支持（中文、英文、阿拉伯文）
+- 本地存储数据
+- 无依赖纯前端实现
 
-#### GitHub Pages
-1. 创建GitHub仓库
-2. 上传项目文件
-3. 在仓库设置中启用GitHub Pages
-4. 选择主分支作为源
+## 访问地址
 
-#### Vercel
-1. 连接GitHub仓库到Vercel
-2. 自动部署，无需配置
+- **GitHub Pages**: https://ricky5683.github.io/ai-chat-demo/
+- **GitHub 仓库**: https://github.com/Ricky5683/ai-chat-demo
 
-#### Netlify
-1. 将项目文件夹拖拽到Netlify
-2. 或连接GitHub仓库自动部署
+## 更新流程
 
-### 2. 传统Web服务器
+1. 修改代码
+2. 提交更改：
+   ```bash
+   git add .
+   git commit -m "描述更改"
+   git push origin main
+   ```
+3. GitHub Actions 自动部署到 GitHub Pages
 
-#### Apache
-1. 将项目文件复制到网站根目录
-2. 确保Apache支持HTML5推送状态
+## 故障排除
 
-#### Nginx
-1. 将项目文件复制到网站根目录
-2. 配置Nginx支持单页应用
+### 如果 GitHub Pages 不工作
+1. 检查 Actions 标签页是否有部署错误
+2. 确认 gh-pages 分支已创建
+3. 检查仓库设置中的 Pages 配置
 
-### 3. CDN部署
-
-#### 阿里云OSS
-1. 上传文件到OSS存储桶
-2. 配置静态网站托管
-3. 可选：配置CDN加速
-
-#### 腾讯云COS
-1. 上传文件到COS存储桶
-2. 启用静态网站功能
-3. 配置自定义域名
-
-## 📱 移动端优化
-
-### PWA配置
-添加以下文件以支持PWA功能：
-
-#### manifest.json
-```json
-{
-  "name": "AI Chat",
-  "short_name": "AI Chat",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
-}
-```
-
-#### Service Worker
-创建sw.js文件实现离线缓存功能。
-
-### 移动端测试
-- 使用Chrome DevTools模拟移动设备
-- 在真实设备上测试触摸交互
-- 检查不同屏幕尺寸的适配
-
-## 🔧 配置说明
-
-### 环境变量
-如需连接真实API，可配置以下环境变量：
-- `API_BASE_URL`: API基础URL
-- `API_KEY`: API密钥
-
-### 自定义配置
-在script.js中修改以下配置：
-```javascript
-const CONFIG = {
-  API_BASE_URL: 'https://your-api.com',
-  DEFAULT_LANGUAGE: 'zh-CN',
-  MAX_MESSAGE_LENGTH: 1000
-};
-```
-
-## 🛡️ 安全配置
-
-### HTTPS部署
-- 确保生产环境使用HTTPS协议
-- 配置SSL证书
-- 设置安全头部
-
-### 内容安全策略（CSP）
-```html
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
-```
-
-## 📊 监控和分析
-
-### Google Analytics
-添加GA代码到index.html：
-```html
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-```
-
-### 错误监控
-可集成Sentry等错误监控服务。
-
-## 🔄 持续集成/持续部署
-
-### GitHub Actions
-创建.github/workflows/deploy.yml：
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./
-```
-
-## 📈 性能优化
-
-### 文件压缩
-- 压缩CSS和JavaScript文件
-- 优化图片资源
-- 启用GZIP压缩
-
-### 缓存策略
-- 设置合适的缓存头
-- 使用CDN加速静态资源
-- 实施Service Worker缓存
-
-## 🌍 国际化部署
-
-### 多语言版本
-可为不同地区部署不同语言版本：
-- zh.your-domain.com（中文）
-- en.your-domain.com（英文）
-- ar.your-domain.com（阿拉伯语）
-
-### 地理位置路由
-使用CDN的地理位置路由功能，根据用户位置提供最佳语言版本。
-
-## 📞 技术支持
-
-如在部署过程中遇到问题，请：
-1. 检查浏览器控制台错误
-2. 验证文件路径和权限
-3. 确认服务器配置正确
-
-## 🔄 更新部署
-
-### 版本更新
-1. 更新项目文件
-2. 清除浏览器缓存
-3. 测试新功能
-4. 部署到生产环境
-
-### 回滚策略
-保留前一个版本的备份，以便快速回滚。
+### 如果本地开发有问题
+1. 确保使用 HTTP 服务器（不是直接打开文件）
+2. 检查浏览器控制台是否有错误
+3. 清除浏览器缓存 
