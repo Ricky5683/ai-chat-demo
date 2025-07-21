@@ -9,6 +9,8 @@ class AIChat {
         this.currentPage = 'login';
         this.createMode = null; // 当前创建模式：'template' 或 'custom'
         this.selectedTemplate = null; // 选中的模板
+        this.editingRole = null; // 当前编辑的角色
+        this.isEditMode = false; // 是否为编辑模式
         
         // 预设的角色模板
         this.roleTemplates = [
@@ -337,6 +339,10 @@ class AIChat {
         document.querySelectorAll('.template-option').forEach(option => option.classList.remove('selected'));
         document.querySelectorAll('#template-avatar-grid .avatar-option').forEach(option => option.classList.remove('selected'));
         this.selectedTemplate = null;
+        
+        // 重置页面标题和按钮
+        document.getElementById('create-page-title').textContent = '创建AI虚拟角色';
+        document.getElementById('template-create-submit').textContent = '创建角色';
     }
     
     // 设置自定义创建页面
@@ -351,6 +357,59 @@ class AIChat {
         // 重置表单
         document.getElementById('custom-create-form').reset();
         document.querySelectorAll('#custom-avatar-grid .avatar-option').forEach(option => option.classList.remove('selected'));
+        
+        // 重置页面标题和按钮
+        document.getElementById('create-page-title').textContent = '创建AI虚拟角色';
+        document.getElementById('custom-create-submit').textContent = '创建角色';
+    }
+    
+    // 设置模板编辑页面
+    setupTemplateEditPage() {
+        if (!this.editingRole) return;
+        
+        // 填充表单数据
+        document.getElementById('template-role-name').value = this.editingRole.name;
+        
+        // 从完整prompt中提取核心人设
+        let corePersona = this.editingRole.persona;
+        if (this.selectedTemplate) {
+            // 移除模板中的{name}和{persona}占位符，提取实际内容
+            corePersona = corePersona.replace(this.editingRole.name, '').replace(this.selectedTemplate.promptTemplate.replace('{name}', '').replace('{persona}', ''), '').trim();
+        }
+        document.getElementById('template-core-persona').value = corePersona;
+        
+        // 选择头像
+        document.querySelectorAll('#template-avatar-grid .avatar-option').forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.avatar === this.editingRole.avatar) {
+                option.classList.add('selected');
+            }
+        });
+        
+        // 更新页面标题和按钮
+        document.getElementById('create-page-title').textContent = '编辑角色';
+        document.getElementById('template-create-submit').textContent = '保存修改';
+    }
+    
+    // 设置自定义编辑页面
+    setupCustomEditPage() {
+        if (!this.editingRole) return;
+        
+        // 填充表单数据
+        document.getElementById('custom-role-name').value = this.editingRole.name;
+        document.getElementById('custom-persona').value = this.editingRole.persona;
+        
+        // 选择头像
+        document.querySelectorAll('#custom-avatar-grid .avatar-option').forEach(option => {
+            option.classList.remove('selected');
+            if (option.dataset.avatar === this.editingRole.avatar) {
+                option.classList.add('selected');
+            }
+        });
+        
+        // 更新页面标题和按钮
+        document.getElementById('create-page-title').textContent = '编辑角色';
+        document.getElementById('custom-create-submit').textContent = '保存修改';
     }
     
     // 选择模板
@@ -568,6 +627,10 @@ class AIChat {
     createRoleCard(role) {
         const card = document.createElement('div');
         card.className = 'role-card';
+        
+        // 判断是否为我的角色（可编辑）
+        const isMyRole = this.myRoles.some(myRole => myRole.id === role.id);
+        
         card.innerHTML = `
             <div class="role-avatar">${role.avatar}</div>
             <div class="role-info">
@@ -582,7 +645,10 @@ class AIChat {
                     ${role.tags.map(tag => `<span class="role-tag">#${tag}</span>`).join('')}
                 </div>
             </div>
-            <button class="btn-start-chat" data-role-id="${role.id}">${i18n.t('roles.startChat')}</button>
+            <div class="role-actions">
+                <button class="btn-start-chat" data-role-id="${role.id}">${i18n.t('roles.startChat')}</button>
+                ${isMyRole ? `<button class="btn-edit-role" data-role-id="${role.id}" title="编辑角色">✏️</button>` : ''}
+            </div>
         `;
         
         // 添加点击事件
@@ -591,12 +657,38 @@ class AIChat {
             this.startChat(role);
         });
         
+        // 为我的角色添加编辑按钮事件
+        if (isMyRole) {
+            card.querySelector('.btn-edit-role').addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.editRole(role);
+            });
+        }
+        
         return card;
     }
     
     // 开始聊天
     startChat(role) {
         this.showChatPage(role);
+    }
+    
+    // 编辑角色
+    editRole(role) {
+        this.editingRole = role;
+        this.isEditMode = true;
+        
+        // 根据角色类型选择编辑模式
+        if (role.templateId) {
+            // 模板创建的角色
+            this.selectCreateMode('template');
+            this.selectedTemplate = this.roleTemplates.find(t => t.id === role.templateId);
+            this.setupTemplateEditPage();
+        } else {
+            // 自定义创建的角色
+            this.selectCreateMode('custom');
+            this.setupCustomEditPage();
+        }
     }
     
     // 获取或创建聊天
@@ -892,23 +984,44 @@ class AIChat {
                 .replace('{name}', name)
                 .replace('{persona}', corePersona);
             
-            const newRole = {
-                id: Date.now(),
-                name: name,
-                gender: 'female', // 模板角色通常是女性
-                avatar: avatar,
-                age: 22, // 模板角色年龄
-                description: corePersona.substring(0, 50) + (corePersona.length > 50 ? '...' : ''),
-                tags: this.extractTags(corePersona),
-                isPublic: false,
-                persona: fullPrompt,
-                templateId: this.selectedTemplate.id
-            };
+            if (this.isEditMode && this.editingRole) {
+                // 更新现有角色
+                const roleIndex = this.myRoles.findIndex(r => r.id === this.editingRole.id);
+                if (roleIndex !== -1) {
+                    this.myRoles[roleIndex] = {
+                        ...this.editingRole,
+                        name: name,
+                        avatar: avatar,
+                        description: corePersona.substring(0, 50) + (corePersona.length > 50 ? '...' : ''),
+                        tags: this.extractTags(corePersona),
+                        persona: fullPrompt
+                    };
+                    this.saveMyRoles();
+                    this.showToast('角色更新成功', 'success');
+                }
+            } else {
+                // 创建新角色
+                const newRole = {
+                    id: Date.now(),
+                    name: name,
+                    gender: 'female', // 模板角色通常是女性
+                    avatar: avatar,
+                    age: 22, // 模板角色年龄
+                    description: corePersona.substring(0, 50) + (corePersona.length > 50 ? '...' : ''),
+                    tags: this.extractTags(corePersona),
+                    isPublic: false,
+                    persona: fullPrompt,
+                    templateId: this.selectedTemplate.id
+                };
+                
+                this.myRoles.push(newRole);
+                this.saveMyRoles();
+                this.showToast(i18n.t('message.createRoleSuccess'), 'success');
+            }
             
-            this.myRoles.push(newRole);
-            this.saveMyRoles();
-            
-            this.showToast(i18n.t('message.createRoleSuccess'), 'success');
+            // 重置编辑状态
+            this.isEditMode = false;
+            this.editingRole = null;
             this.showRolesPage();
             
         } catch (error) {
@@ -933,22 +1046,43 @@ class AIChat {
             // 模拟API调用
             await this.simulateApiCall();
             
-            const newRole = {
-                id: Date.now(),
-                name: name,
-                gender: 'secret', // 自定义角色性别保密
-                avatar: avatar,
-                age: 25, // 自定义角色年龄
-                description: persona.substring(0, 50) + (persona.length > 50 ? '...' : ''),
-                tags: this.extractTags(persona),
-                isPublic: false,
-                persona: persona
-            };
+            if (this.isEditMode && this.editingRole) {
+                // 更新现有角色
+                const roleIndex = this.myRoles.findIndex(r => r.id === this.editingRole.id);
+                if (roleIndex !== -1) {
+                    this.myRoles[roleIndex] = {
+                        ...this.editingRole,
+                        name: name,
+                        avatar: avatar,
+                        description: persona.substring(0, 50) + (persona.length > 50 ? '...' : ''),
+                        tags: this.extractTags(persona),
+                        persona: persona
+                    };
+                    this.saveMyRoles();
+                    this.showToast('角色更新成功', 'success');
+                }
+            } else {
+                // 创建新角色
+                const newRole = {
+                    id: Date.now(),
+                    name: name,
+                    gender: 'secret', // 自定义角色性别保密
+                    avatar: avatar,
+                    age: 25, // 自定义角色年龄
+                    description: persona.substring(0, 50) + (persona.length > 50 ? '...' : ''),
+                    tags: this.extractTags(persona),
+                    isPublic: false,
+                    persona: persona
+                };
+                
+                this.myRoles.push(newRole);
+                this.saveMyRoles();
+                this.showToast(i18n.t('message.createRoleSuccess'), 'success');
+            }
             
-            this.myRoles.push(newRole);
-            this.saveMyRoles();
-            
-            this.showToast(i18n.t('message.createRoleSuccess'), 'success');
+            // 重置编辑状态
+            this.isEditMode = false;
+            this.editingRole = null;
             this.showRolesPage();
             
         } catch (error) {

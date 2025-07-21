@@ -418,6 +418,35 @@ body {
     background: #5a67d8;
 }
 
+.role-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.btn-edit-role {
+    background: #f8f9fa;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 36px;
+}
+
+.btn-edit-role:hover {
+    background: #e9ecef;
+    color: #495057;
+    border-color: #adb5bd;
+}
+
 /* 聊天列表 */
 .chat-list {
     display: grid;
@@ -1392,6 +1421,18 @@ body {
     .btn-start-chat {
         margin: 0;
         width: 100%;
+    }
+    
+    .role-actions {
+        margin: 0;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 12px;
+    }
+    
+    .btn-edit-role {
+        flex: 1;
+        margin-right: 8px;
     }
     
     .radio-group {
