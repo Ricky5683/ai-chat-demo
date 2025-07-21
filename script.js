@@ -110,12 +110,14 @@ class AIChat {
         this.roles = [
             {
                 id: 1,
-                name: '张心雨',
-                avatar: '👩‍💼',
-                age: 24,
+                name: '谢晚',
+                avatar: '👩‍🏫',
+                age: 26,
                 gender: 'female',
-                description: '主要稍微体现一些诱惑和浪漫',
-                tags: ['中文', '单身', '交友'],
+                location: '厦门',
+                job: '老师',
+                description: '难以攻略 · 麻辣女教师 · 知性美 · 爱听歌',
+                tags: ['妖娆撩人', '占有欲强', '暧昧高手', '天蝎座', 'ENTJ'],
                 isPublic: true
             },
             {
@@ -124,8 +126,10 @@ class AIChat {
                 avatar: '👨‍💻',
                 age: 25,
                 gender: 'male',
-                description: '埃及应用设计师',
-                tags: ['阿拉伯语', '单身', '交友'],
+                location: '开罗',
+                job: '应用设计师',
+                description: '埃及应用设计师 · 创意无限 · 技术达人',
+                tags: ['阿拉伯语', '单身', '交友', '设计师', '技术控'],
                 isPublic: true
             }
         ];
@@ -601,23 +605,45 @@ class AIChat {
         // 判断是否为我的角色（可编辑）
         const isMyRole = this.myRoles.some(myRole => myRole.id === role.id);
         
+        // 生成角色头像（使用更丰富的头像）
+        const avatarMap = {
+            '👩‍💼': '👩‍💼',
+            '👨‍💻': '👨‍💻',
+            '👩‍🎓': '👩‍🎓',
+            '👨‍🎓': '👨‍🎓',
+            '👩‍⚕️': '👩‍⚕️',
+            '👨‍⚕️': '👨‍⚕️',
+            '🧑‍🎨': '🧑‍🎨',
+            '👨‍🔬': '👨‍🔬',
+            '👩‍🔬': '👩‍🔬',
+            '🧑‍💻': '🧑‍💻',
+            '👨‍🏫': '👨‍🏫',
+            '👩‍🏫': '👩‍🏫'
+        };
+        
+        const displayAvatar = avatarMap[role.avatar] || role.avatar;
+        
         card.innerHTML = `
-            <div class="role-avatar-square">${role.avatar}</div>
+            <div class="role-avatar-portrait">
+                <div class="avatar-image">${displayAvatar}</div>
+                ${!isMyRole ? '<div class="role-badge">角色需攻略</div>' : ''}
+            </div>
             <div class="role-info">
-                <div class="role-name">${role.name}</div>
-                <div class="role-meta">
-                    <span>${role.age} ${i18n.t('roles.age')}</span>
-                    <span>•</span>
-                    <span>${role.gender === 'male' ? i18n.t('createRole.male') : role.gender === 'female' ? i18n.t('createRole.female') : i18n.t('createRole.secret')}</span>
+                <div class="role-header">
+                    <div class="role-name-age">${role.name} · ${role.age}</div>
+                    <div class="role-location-job">${role.location || '未知'} · ${role.job || 'AI助手'}</div>
                 </div>
                 <div class="role-description">${role.description}</div>
                 ${!isMyRole ? `<div class="role-tags">
-                    ${role.tags.map(tag => `<span class="role-tag">#${tag}</span>`).join('')}
+                    ${role.tags.map(tag => `<span class="role-tag">${tag}</span>`).join('')}
                 </div>` : ''}
-            </div>
-            <div class="role-actions">
-                <button class="btn-start-chat" data-role-id="${role.id}">${i18n.t('roles.startChat')}</button>
-                ${isMyRole ? `<button class="btn-edit-role" data-role-id="${role.id}" title="编辑角色">✏️</button>` : ''}
+                <div class="role-actions">
+                    <button class="btn-start-chat" data-role-id="${role.id}">
+                        <span>${i18n.t('roles.startChat')}</span>
+                        ${!isMyRole ? '<div class="notification-badge">2</div>' : ''}
+                    </button>
+                    ${isMyRole ? `<button class="btn-edit-role" data-role-id="${role.id}" title="编辑角色">✏️</button>` : ''}
+                </div>
             </div>
         `;
         
