@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI角色资料 - AI Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="查看AI虚拟角色的详细资料">
+    <meta name="keywords" content="AI, 角色资料, 虚拟角色, 个人资料">
+</head>
+<body>
+    <div class="app">
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">19:45</span>
+            </div>
+            <div class="status-center">
+                <div class="music-player">
+                    <div class="music-avatar">🎵</div>
+                    <div class="music-info">
+                        <span class="music-title">她喜爱的旋律</span>
+                        <span class="music-artist">y-平井大</span>
+                    </div>
+                    <div class="music-controls">
+                        <span class="music-text">Bea</span>
+                        <span class="heart-icon">❤️+</span>
+                    </div>
+                </div>
+            </div>
+            <div class="status-right">
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+                <span class="battery">52%</span>
+            </div>
+        </div>
+
+        <!-- 导航栏 -->
+        <div class="profile-header">
+            <button class="back-btn" onclick="goBack()">
+                <span class="back-arrow">‹</span>
+            </button>
+            <div class="header-title">角色资料</div>
+            <div class="header-actions">
+                <button class="btn-share" title="分享">📤</button>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="profile-container">
+            <!-- 头像区域 -->
+            <div class="profile-hero">
+                <div class="profile-avatar-container">
+                    <div class="profile-avatar" id="profile-avatar">
+                        <!-- 头像将通过JavaScript动态设置 -->
+                    </div>
+                    <div class="profile-overlay">
+                        <div class="profile-info">
+                            <div class="profile-name-age" id="profile-name-age">
+                                <!-- 姓名和年龄将通过JavaScript动态设置 -->
+                            </div>
+                            <div class="profile-job-zodiac" id="profile-job-zodiac">
+                                <!-- 职业和星座将通过JavaScript动态设置 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关于我区域 -->
+            <div class="about-me-section">
+                <div class="about-me-card">
+                    <div class="about-me-header">
+                        <h3 class="about-me-title">关于我</h3>
+                    </div>
+                    <div class="about-me-content">
+                        <div class="about-me-text" id="about-me-text">
+                            <!-- 个人描述将通过JavaScript动态设置 -->
+                        </div>
+                        <div class="about-me-expand">
+                            <span class="expand-text">展开</span>
+                            <span class="expand-arrow">▼</span>
+                        </div>
+                    </div>
+                    <div class="quote-marks">"</div>
+                </div>
+            </div>
+
+            <!-- 标签区域 -->
+            <div class="profile-tags-section">
+                <div class="profile-tags" id="profile-tags">
+                    <!-- 标签将通过JavaScript动态设置 -->
+                </div>
+            </div>
+
+            <!-- 操作按钮区域 -->
+            <div class="profile-actions">
+                <button class="btn-start-chat-profile" onclick="startChat()">
+                    <span class="btn-icon">💬</span>
+                    <span class="btn-text">开始聊天</span>
+                </button>
+                <button class="btn-favorite" onclick="toggleFavorite()">
+                    <span class="btn-icon" id="favorite-icon">🤍</span>
+                    <span class="btn-text">收藏</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="i18n.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html> 

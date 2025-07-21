@@ -710,8 +710,13 @@ class AIChat {
     // 设置聊天页面
     setupChatPage(role) {
         document.getElementById('chat-name').textContent = role.name;
-        document.getElementById('chat-avatar').src = this.getAvatarUrl(role.avatar);
-        document.getElementById('chat-avatar').alt = role.name;
+        const chatAvatar = document.getElementById('chat-avatar');
+        chatAvatar.src = this.getAvatarUrl(role.avatar);
+        chatAvatar.alt = role.name;
+        
+        // 让头像可点击
+        chatAvatar.classList.add('clickable-avatar');
+        chatAvatar.onclick = () => this.viewProfile(role.id);
         
         // 重置输入框
         document.getElementById('message-input').value = '';
@@ -745,7 +750,7 @@ class AIChat {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${message.sender === 'user' ? 'user' : 'ai'}`;
         messageDiv.innerHTML = `
-            <div class="message-avatar">
+            <div class="message-avatar ${message.sender === 'ai' ? 'clickable-avatar' : ''}" ${message.sender === 'ai' ? `onclick="aiChat.viewProfile(${this.getCurrentRole().id})"` : ''}>
                 ${message.sender === 'user' ? this.currentUser.avatar : this.getCurrentRole().avatar}
             </div>
             <div class="message-bubble">
@@ -809,7 +814,7 @@ class AIChat {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message ai typing';
         typingDiv.innerHTML = `
-            <div class="message-avatar">${this.getCurrentRole().avatar}</div>
+            <div class="message-avatar clickable-avatar" onclick="aiChat.viewProfile(${this.getCurrentRole().id})">${this.getCurrentRole().avatar}</div>
             <div class="message-bubble">
                 <div class="message-content">${i18n.t('chat.typing')}</div>
             </div>
@@ -1266,6 +1271,11 @@ class AIChat {
         });
     }
     
+    // 查看角色资料
+    viewProfile(roleId) {
+        window.location.href = `profile.html?roleId=${roleId}`;
+    }
+
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
