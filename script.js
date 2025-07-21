@@ -626,7 +626,6 @@ class AIChat {
         card.innerHTML = `
             <div class="role-avatar-section">
                 <div class="avatar-image">${displayAvatar}</div>
-                ${!isMyRole ? '<div class="role-badge">角色需攻略</div>' : ''}
             </div>
             <div class="role-content-section">
                 <div class="role-header">

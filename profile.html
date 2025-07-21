@@ -10,40 +10,12 @@
 </head>
 <body>
     <div class="app">
-        <!-- 状态栏 -->
-        <div class="status-bar">
-            <div class="status-left">
-                <span class="time">19:45</span>
-            </div>
-            <div class="status-center">
-                <div class="music-player">
-                    <div class="music-avatar">🎵</div>
-                    <div class="music-info">
-                        <span class="music-title">她喜爱的旋律</span>
-                        <span class="music-artist">y-平井大</span>
-                    </div>
-                    <div class="music-controls">
-                        <span class="music-text">Bea</span>
-                        <span class="heart-icon">❤️+</span>
-                    </div>
-                </div>
-            </div>
-            <div class="status-right">
-                <span class="signal">📶</span>
-                <span class="wifi">📶</span>
-                <span class="battery">52%</span>
-            </div>
-        </div>
-
         <!-- 导航栏 -->
         <div class="profile-header">
             <button class="back-btn" onclick="goBack()">
                 <span class="back-arrow">‹</span>
             </button>
             <div class="header-title">角色资料</div>
-            <div class="header-actions">
-                <button class="btn-share" title="分享">📤</button>
-            </div>
         </div>
 
         <!-- 主要内容区域 -->
@@ -77,12 +49,7 @@
                         <div class="about-me-text" id="about-me-text">
                             <!-- 个人描述将通过JavaScript动态设置 -->
                         </div>
-                        <div class="about-me-expand">
-                            <span class="expand-text">展开</span>
-                            <span class="expand-arrow">▼</span>
-                        </div>
                     </div>
-                    <div class="quote-marks">"</div>
                 </div>
             </div>
 
@@ -92,18 +59,15 @@
                     <!-- 标签将通过JavaScript动态设置 -->
                 </div>
             </div>
+        </div>
 
-            <!-- 操作按钮区域 -->
-            <div class="profile-actions">
-                <button class="btn-start-chat-profile" onclick="startChat()">
-                    <span class="btn-icon">💬</span>
-                    <span class="btn-text">开始聊天</span>
-                </button>
-                <button class="btn-favorite" onclick="toggleFavorite()">
-                    <span class="btn-icon" id="favorite-icon">🤍</span>
-                    <span class="btn-text">收藏</span>
-                </button>
-            </div>
+        <!-- 固定的开始聊天按钮 -->
+        <div class="fixed-chat-button">
+            <button class="btn-start-chat-fixed" onclick="startChat()">
+                <span class="btn-icon">💬</span>
+                <span class="btn-text">开始聊天</span>
+            </button>
+        </div>
         </div>
     </div>
 
