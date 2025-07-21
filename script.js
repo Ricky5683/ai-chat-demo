@@ -110,52 +110,22 @@ class AIChat {
         this.roles = [
             {
                 id: 1,
-                name: '小雅',
+                name: '张心雨',
                 avatar: '👩‍💼',
-                age: 25,
+                age: 24,
                 gender: 'female',
-                description: '温柔体贴的AI助手，擅长倾听和安慰',
-                tags: ['温柔', '体贴', '倾听者'],
+                description: '主要稍微体现一些诱惑和浪漫',
+                tags: ['中文', '单身', '交友'],
                 isPublic: true
             },
             {
                 id: 2,
-                name: '博学教授',
-                avatar: '👨‍🏫',
-                age: 45,
+                name: 'Adma',
+                avatar: '👨‍💻',
+                age: 25,
                 gender: 'male',
-                description: '知识渊博的学者，能解答各种学术问题',
-                tags: ['博学', '学者', '教育'],
-                isPublic: true
-            },
-            {
-                id: 3,
-                name: '萌萌子',
-                avatar: '👧',
-                age: 18,
-                gender: 'female',
-                description: '可爱活泼的二次元少女，喜欢动漫和游戏',
-                tags: ['可爱', '二次元', '游戏'],
-                isPublic: true
-            },
-            {
-                id: 4,
-                name: '冷酷侦探',
-                avatar: '🕵️‍♂️',
-                age: 35,
-                gender: 'male',
-                description: '理性冷静的侦探，擅长逻辑推理和分析',
-                tags: ['理性', '推理', '分析'],
-                isPublic: true
-            },
-            {
-                id: 5,
-                name: '心理医生',
-                avatar: '👩‍⚕️',
-                age: 32,
-                gender: 'female',
-                description: '专业的心理咨询师，善于情感疏导',
-                tags: ['专业', '心理', '疏导'],
+                description: '埃及应用设计师',
+                tags: ['阿拉伯语', '单身', '交友'],
                 isPublic: true
             }
         ];
@@ -632,7 +602,7 @@ class AIChat {
         const isMyRole = this.myRoles.some(myRole => myRole.id === role.id);
         
         card.innerHTML = `
-            <div class="role-avatar">${role.avatar}</div>
+            <div class="role-avatar-square">${role.avatar}</div>
             <div class="role-info">
                 <div class="role-name">${role.name}</div>
                 <div class="role-meta">
@@ -641,9 +611,9 @@ class AIChat {
                     <span>${role.gender === 'male' ? i18n.t('createRole.male') : role.gender === 'female' ? i18n.t('createRole.female') : i18n.t('createRole.secret')}</span>
                 </div>
                 <div class="role-description">${role.description}</div>
-                <div class="role-tags">
+                ${!isMyRole ? `<div class="role-tags">
                     ${role.tags.map(tag => `<span class="role-tag">#${tag}</span>`).join('')}
-                </div>
+                </div>` : ''}
             </div>
             <div class="role-actions">
                 <button class="btn-start-chat" data-role-id="${role.id}">${i18n.t('roles.startChat')}</button>
